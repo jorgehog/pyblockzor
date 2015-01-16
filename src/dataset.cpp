@@ -15,7 +15,14 @@ Dataset::Dataset(const vec data,
     m_nBlocks_raw(nBlocks),
     m_data(data)
 {
-
+    if (!consistencyCheck(m_minBlockSize,
+                          m_maxBlockSize,
+                          m_nBlocks_raw,
+                          m_data.size()))
+    {
+        cerr << "Inconsistent parameters, aborting" << endl;
+        exit(1);
+    }
 }
 
 Dataset::~Dataset()
@@ -41,6 +48,42 @@ mat Dataset::block()
     }
 
     return join_rows(conv_to<vec>::from(blockSizes), result);
+}
+
+bool Dataset::consistencyCheck(uint minbs, uint maxbs, uint nbs, uint nDataPoints, bool silent)
+{
+
+    if (!consistencyCheckMaxBlockSize(maxbs, nDataPoints))
+    {
+        if (!silent)
+        {
+            cerr << _consistencyCheckMaxBlockSizeMessage(maxbs, nDataPoints) << endl;
+        }
+
+        return false;
+    }
+
+    if (!consistencyCheckMinBlockSize(minbs))
+    {
+        if (!silent)
+        {
+            cerr << _consistencyCheckMinBlockSizeMessage(minbs) << endl;
+        }
+
+        return false;
+    }
+
+    if (!consistencyCheckNBlocks(maxbs, minbs, nbs))
+    {
+        if (!silent)
+        {
+            cerr << _consistencyCheckNBlocksMessage(maxbs, minbs, nbs) << endl;
+        }
+
+        return false;
+    }
+
+    return true;
 }
 
 uvec Dataset::getUniqueBlocks() const
@@ -82,6 +125,48 @@ double Dataset::getBlockVariance(const uint blockSize) const
 
     //Use sample variance here since we use potentially few samples
     return squareMean/(nBlocks-1) - nBlocks*mean*mean/(nBlocks-1);
+}
+
+bool Dataset::consistencyCheckMinBlockSize(uint minbs)
+{
+    return minbs >= 1;
+}
+
+bool Dataset::consistencyCheckMaxBlockSize(uint maxbs, uint N)
+{
+    return maxbs <= N/2;
+}
+
+bool Dataset::consistencyCheckNBlocks(uint maxbs, uint minbs, uint nbs)
+{
+    return nbs <= maxbs - minbs;
+}
+
+string Dataset::_consistencyCheckMinBlockSizeMessage(uint minbs)
+{
+    stringstream s;
+    s << "Invalid local min block size " << minbs
+      << ": Min block size must not be lower than 1";
+
+    return s.str();
+}
+
+string Dataset::_consistencyCheckMaxBlockSizeMessage(uint maxbs, uint N)
+{
+    stringstream s;
+    s << "Invalid max block size " << maxbs
+      << ": Max block size must not be greater than " <<  N/2;
+
+    return s.str();
+}
+
+string Dataset::_consistencyCheckNBlocksMessage(uint maxbs, uint minbs, uint nbs)
+{
+    stringstream s;
+    s << "Invalid amount of block samples " << nbs
+      << ": Block samples must be lower or equal " << maxbs - minbs;
+
+    return s.str();
 }
 
 

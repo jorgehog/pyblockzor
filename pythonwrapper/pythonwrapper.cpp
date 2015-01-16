@@ -10,14 +10,6 @@ namespace bn = boost::numpy;
 using namespace arma;
 using namespace std;
 
-
-
-BOOST_PYTHON_MODULE(pyblockzor)
-{
-    bn::initialize();
-    bp::def("block", pyblockzor::block);
-}
-
 boost::numpy::ndarray pyblockzor::block(const boost::numpy::ndarray &inputData,
                                         const uint minBlockSize,
                                         const uint maxBlockSize,
@@ -37,3 +29,20 @@ boost::numpy::ndarray pyblockzor::block(const boost::numpy::ndarray &inputData,
 
     return numpyResult;
 }
+
+
+BOOST_PYTHON_MODULE(pyblockzor)
+{
+    bn::initialize();
+    bp::def("block", pyblockzor::block);
+    bp::def("consistencyCheck", pyblockzor::Dataset::consistencyCheck);
+
+    bp::def("consistencyCheckMinBlockSize", pyblockzor::Dataset::consistencyCheckMinBlockSize);
+    bp::def("consistencyCheckMaxBlockSize", pyblockzor::Dataset::consistencyCheckMaxBlockSize);
+    bp::def("consistencyCheckNBlocks", pyblockzor::Dataset::consistencyCheckNBlocks);
+
+    bp::def("_consistencyCheckMinBlockSizeMessage", pyblockzor::Dataset::_consistencyCheckMinBlockSizeMessage);
+    bp::def("_consistencyCheckMaxBlockSizeMessage", pyblockzor::Dataset::_consistencyCheckMaxBlockSizeMessage);
+    bp::def("_consistencyCheckNBlocksMessage", pyblockzor::Dataset::_consistencyCheckNBlocksMessage);
+}
+
