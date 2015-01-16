@@ -5,6 +5,9 @@
 namespace pyblockzor
 {
 
-    boost::numpy::ndarray block(const boost::numpy::ndarray &input, const int min, const int max);
+boost::numpy::ndarray block(const boost::numpy::ndarray &inputData,
+                            const uint minBlockSize,
+                            const uint maxBlockSize,
+                            const uint nBlocks);
 
 }

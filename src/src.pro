@@ -10,6 +10,8 @@ SOURCES += \
 HEADERS += \
     dataset.h
 
+LIBS += -fopenmp
+
 
 QMAKE_PRE_LINK += $(MKDIR) $$PWD/../lib $$shadowed($$PWD)/../lib
 

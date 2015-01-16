@@ -66,7 +66,10 @@ double Dataset::getBlockVariance(const uint blockSize) const
     double squareMean = 0;
 
     uint nBlocks = m_data.size() / blockSize;
-    for (uint i = 0; i < nBlocks; i++) {
+
+#pragma omp parallel for private(blockMean) reduction(+:mean, squareMean)
+    for (uint i = 0; i < nBlocks; i++)
+    {
 
         //mean inside block number i which goes from i*blocksize to (i+1)*blocksize - 1
         blockMean = arma::mean(m_data(span(i*blockSize, (i + 1) * blockSize - 1)));

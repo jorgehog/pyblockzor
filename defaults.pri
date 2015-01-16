@@ -11,7 +11,7 @@ LIBS += -larmadillo
 
 INCLUDEPATH += $$PWD/utils
 
-COMMON_CXXFLAGS = -std=c++11
+COMMON_CXXFLAGS = -std=c++11 -fopenmp
 
 
 QMAKE_CXXFLAGS += \
