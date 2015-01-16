@@ -1,6 +1,7 @@
 TEMPLATE = lib
+CONFIG += plugin
 
-TARGET = ../lib/pyblockzor_python
+TARGET = ../lib/pyblockzor
 
 include(../defaults.pri)
 
@@ -10,15 +11,7 @@ HEADERS += pythonwrapper.h
 
 INCLUDEPATH += $$PWD/../include /usr/include/python2.7
 
-LIBS += -L$$PWD/../lib -lpyblockzor -lboost_python -lboost_numpy
+LIBS += -L$$shadowed($$PWD)/../lib -lpyblockzor_core -lboost_python -lboost_numpy
 
-QMAKE_POST_LINK += bash $$PWD/build.sh $$PWD $$shadowed($$PWD)
-
-QMAKE_CLEAN += $$shadowed($$PWD)/../build/lib.linux-x86_64-2.7/pyblockzor.so \
-    $$shadowed($$PWD)/../build/temp.linux-x86_64-2.7/pythonwrapper.o
-
-OTHER_FILES += setup.py
-
-DISTFILES += \
-    build.sh
+QMAKE_POST_LINK += mv $$shadowed($$PWD)/../lib/libpyblockzor.so $$shadowed($$PWD)/../lib/pyblockzor.so
 

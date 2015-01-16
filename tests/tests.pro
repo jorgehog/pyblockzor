@@ -5,7 +5,7 @@ CONFIG -= qt
 
 include(../defaults.pri)
 
-LIBS += -L../lib -lpyblockzor
+LIBS += -L../lib -lpyblockzor_core
 
 SOURCES += testsmain.cpp
 

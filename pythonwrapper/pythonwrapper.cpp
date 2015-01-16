@@ -10,15 +10,17 @@ namespace bn = boost::numpy;
 using namespace arma;
 using namespace std;
 
-bn::ndarray pyblockzor::block(const int N, const int min, const int max)
+bn::ndarray pyblockzor::block(const bn::ndarray &input, const int min, const int max)
 {
-    vec data = linspace<vec>(1, 100, N);
+    vec data(reinterpret_cast<double*>(input.get_data()), input.shape(0), false);
 
     pyblockzor::Dataset set(data, min, max, 10);
 
     mat result = set.block();
 
-    Py_intptr_t shape[2] = {result.n_rows, result.n_cols};
+    cout << result << endl;
+
+    Py_intptr_t shape[2] = {result.n_cols, result.n_rows};
     bn::ndarray numpyResult = bn::zeros(2, shape, bn::dtype::get_builtin<double>());
     std::copy(result.begin(), result.end(), reinterpret_cast<double*>(numpyResult.get_data()));
     return numpyResult;

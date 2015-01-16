@@ -1,6 +1,6 @@
 TEMPLATE = lib
 
-TARGET = ../lib/pyblockzor
+TARGET = ../lib/pyblockzor_core
 
 include(../defaults.pri)
 
